@@ -1,18 +1,27 @@
+
 package com.sk.eadmin.biz.controller;
 
 import java.util.ArrayList;
 import java.util.List;
 
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.sk.eadmin.biz.dto.AddCustomerProblemRegistInputDTO;
 import com.sk.eadmin.biz.dto.CustomerProblemRegistInputDTO;
+import com.sk.eadmin.biz.dto.CustomerProblemRegistMapperOutputDTO;
 import com.sk.eadmin.biz.dto.CustomerProblemRegistOutputDTO;
 import com.sk.eadmin.biz.dto.CustomerProblemRegistResDTO;
+import com.sk.eadmin.biz.dto.ModifyCustomerProblemRegistInputDTO;
 import com.sk.eadmin.biz.service.CustomerProblemService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -23,6 +32,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @Tag(name = "customer-problem", description = "고객문의")
 @RestController
@@ -103,4 +113,84 @@ public class CustomProblemController {
     }
     return new ResponseEntity<List<CustomerProblemRegistResDTO>>(rets, HttpStatus.OK);
   }
+
+
+
+
+
+
+
+/* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>Post */
+@PostMapping("/customer-problem")
+@Operation(summary = "고객 문의 등록", description = "고객의 문의를 등록한다.")
+public ResponseEntity<Void>  addCustomerProblemRegist( @Valid @RequestBody AddCustomerProblemRegistInputDTO inputDTO  ) {
+
+  System.out.println("Controller : addCustomerProblemRegist");
+  System.out.println(inputDTO);
+  customerProblemService.addCustomerProblemRegist(inputDTO);
+  return ResponseEntity.noContent().build();
+
+  }
+
+
+  /* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>Patch */
+@PatchMapping("/customer-problem/{registID}")
+@Operation(summary = "고객 문의 수정", description = "고객의 문의를 수정 한다.")
+public ResponseEntity<Void>  modifyCustomerProblemRegist( @Valid @PathVariable Integer registID 
+                                                      ,  @Valid @RequestBody ModifyCustomerProblemRegistInputDTO inputDTO ) {
+
+  System.out.println("Controller : modifyCustomerProblemRegist");
+  System.out.println("registID : " + registID);
+  System.out.println("inputDTO : " + inputDTO);  
+  customerProblemService.modifyCustomerProblemRegist(registID, inputDTO);
+  return ResponseEntity.noContent().build();
+
+  }
+  
+
+
+    /* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>Delete */
+@DeleteMapping("/customer-problem/{registID}")
+@Operation(summary = "고객접수문의삭제", description = "고객의 문의를 삭제 한다.")
+public ResponseEntity<Void>  deleteCustomerProblemRegist( @Valid @PathVariable Integer registID  ) {
+
+  System.out.println("Controller : deleteCustomerProblemRegist");
+  System.out.println("registID : " + registID);
+  customerProblemService.deleteCustomerProblemRegist(registID);
+  return ResponseEntity.noContent().build();
+
+  }
+
+@GetMapping("/customer-problem/{registID}")
+@Operation(summary = "고객접수문의 상세조회", description = "고객의 문의를 상세 조회 한다.")
+public ResponseEntity<CustomerProblemRegistResDTO> getCustomerProblemRegistDetail(@Valid @PathVariable Integer registID) {
+
+  System.out.println("Controller : getCustomerProblemRegistDetail");
+  System.out.println("registID : " + registID);
+
+  CustomerProblemRegistMapperOutputDTO fromDB = customerProblemService.getCustomerProblemRegistDetail(registID);
+
+  System.out.println(fromDB);
+  System.out.println();
+  System.out.println();
+
+
+
+    CustomerProblemRegistResDTO res = CustomerProblemRegistResDTO.builder()
+        .custNm(fromDB.getCustNm())
+        .reqDesc(fromDB.getReqDesc())
+        .custMbl(fromDB.getCustMbl())
+        .prgsSts(fromDB.getPrgsSts())
+        .prgsStsVal(fromDB.getPrgsStsVal())
+        .prbmDgr(fromDB.getPrbmDgr())
+        .regId(fromDB.getRegId())
+        .build();
+
+        System.out.println(res);
+
+   return ResponseEntity.ok(res);
+}
+
+
+
 }
