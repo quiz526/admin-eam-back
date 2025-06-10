@@ -1,15 +1,23 @@
-
 package com.sk.eadmin.biz.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Builder
 @Data
 @AllArgsConstructor
-public class CustomerProblemRegistInputDTO {
-  private String reqID;
+@NoArgsConstructor
+@Getter
+@Setter
+@ToString
+public class AddCustomerProblemRegistInputDTO {
+
+  private String reqestID;
   private Integer registID;
   private String customerName;
   private String customerMobile;
