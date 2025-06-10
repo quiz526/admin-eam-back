@@ -3,6 +3,7 @@ package com.sk.eadmin.biz.mapper;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import com.sk.eadmin.biz.dto.AddCustomerProblemRegistInputDTO;
 import com.sk.eadmin.biz.dto.CustomerProblemRegistMapperInputDTO;
